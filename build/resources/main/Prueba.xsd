@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:annotation>
+            <xs:documentation xml:lang="es">Esquema que define Lista de colectivos y tarifas de título para sencillos para prolongación de recorrido (SNC) (TLV=B7h)</xs:documentation>
+	</xs:annotation>
+	<xs:element name="Colectivo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Tarifa_Venta_1" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Tarifa_Venta_2" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Tarifa_Venta_3" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="Codigo" type="xs:string" use="required"/>
+			<xs:attribute name="Descripcion" type="xs:string" use="required"/>
+
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Empresa_Propietaria_Cod" type="xs:string"/>
+	<xs:element name="Empresa_Propietaria_Perfil" type="xs:string"/>
+	<xs:element name="Fecha_Cambio_Venta1" type="xs:string"/>
+	<xs:element name="Fecha_Cambio_Venta2" type="xs:string"/>
+	<xs:element name="Fecha_Fin_Venta" type="xs:string"/>
+	<xs:element name="Fecha_Inicio_Venta" type="xs:string"/>
+	<xs:element name="Informacion_Tarifas_Titulos">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Titulo" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="TipoTLV" use="required">
+				<xs:simpleType>
+					<xs:annotation>
+						<xs:documentation xml:lang="es">Esta TLV debe tener siempre uno de los valores especificados en la restricción</xs:documentation>
+					</xs:annotation>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="B7|B7h"/>
+					</xs:restriction>    
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Version" use="required">
+				<xs:simpleType>
+					<xs:annotation>
+						<xs:documentation xml:lang="es">El número de version debe ser siempre 3.0</xs:documentation>
+					</xs:annotation>
+					<xs:restriction base="xs:float">
+						<xs:pattern value="1.0"/>
+					</xs:restriction>    
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="fecha" type="xs:dateTime" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Tarifa_Venta_1">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Tipo_Unidades" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Unidades" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Tarifa_Venta_2">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Tipo_Unidades" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Unidades" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Tarifa_Venta_3">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Tipo_Unidades" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Unidades" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Tipo_Unidades" type="xs:string"/>
+	<xs:element name="Titulo">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Empresa_Propietaria_Cod" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Fecha_Inicio_Venta" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Fecha_Cambio_Venta1" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Fecha_Cambio_Venta2" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Fecha_Fin_Venta" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="Colectivo" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="Codigo" type="xs:string" use="required"/>
+  		<xs:attribute name="Descripcion" type="xs:string" use="required"/>
+  		<xs:attribute name="Zona" type="xs:string" use="required"/>
+                </xs:complexType>
+	</xs:element>
+	<xs:element name="Unidades" type="xs:int"/>
+</xs:schema>
