@@ -102,11 +102,11 @@ public class PanelBusqueda extends JPanel
         for (String[] fila : datos) {
             modeloColectivos.addRow(fila);
         }
-        layoutCentral.show(panelCentral,"colecctivos");
+        layoutCentral.show(panelCentral,"colectivos");
     }
     public void mostrarColectivos()
     {
-        layoutCentral.show(panelCentral,"colecctivos");
+        layoutCentral.show(panelCentral,"colectivos");
     }
 
     public JTable getTablaTitulos() {

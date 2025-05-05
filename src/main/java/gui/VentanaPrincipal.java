@@ -8,10 +8,9 @@ public class VentanaPrincipal extends JFrame {
     private PanelVerificador panelvVerificador;
     private PanelBusqueda panelBusqueda;
     private PanelRadioBotones panelRadioBotones;
-    private FiltrosPanelEscritura panelEscritura;
+    private PanelEscritura panelEscritura;
 
-    private JPanel panelOpciones;
-    private CardLayout layoutOpciones;
+
 
     private JPanel panelCentral;
     private CardLayout layoutCentral;
@@ -24,25 +23,20 @@ public class VentanaPrincipal extends JFrame {
 
         // Panel superior con botones y opciones
         PanelBotonesPrincipales panelBotones = new PanelBotonesPrincipales(this);
-        this.panelEscritura = new FiltrosPanelEscritura();
+        this.panelEscritura = new PanelEscritura();
 
         MisRadioBotones gestorRadios = new MisRadioBotones(this);
         this.panelRadioBotones = gestorRadios.crearPanel();
 
-        layoutOpciones = new CardLayout();
-        panelOpciones = new JPanel(layoutOpciones);
+
 
         JPanel panelVacio = new JPanel();
-        panelOpciones.add(panelVacio, "vacio");
-        panelOpciones.add(panelRadioBotones, "busqueda");
-        panelOpciones.add(panelEscritura, "escritura");
 
-        layoutOpciones.show(panelOpciones, "vacio");
 
-        JPanel panelSuperior = new JPanel();
-        panelSuperior.setLayout(new BoxLayout(panelSuperior, BoxLayout.Y_AXIS));
+        JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER,20,10));
+        panelSuperior.setBackground(Color.LIGHT_GRAY);
         panelSuperior.add(panelBotones);
-        panelSuperior.add(panelOpciones);
+
 
 
         layoutCentral = new CardLayout();
@@ -53,6 +47,9 @@ public class VentanaPrincipal extends JFrame {
 
         panelCentral.add(panelvVerificador, "lectura");
         panelCentral.add(panelBusqueda, "busqueda");
+        panelCentral.add(panelEscritura, "escritura");
+
+
 
         setLayout(new BorderLayout());
         add(panelSuperior, BorderLayout.NORTH);
@@ -62,30 +59,6 @@ public class VentanaPrincipal extends JFrame {
 
         setVisible(true);
 
-        // Acciones de los botones en panel de escritura
-        panelEscritura.getBotonOK().addActionListener(e -> {
-            String codigo = panelEscritura.getTextoBusqueda().trim();
-            if (!codigo.isEmpty()) {
-                String[] resultado = data.LectorXML.buscarTituloPorCodigo(codigo);
-                if (resultado[0].equals("No encontrado") || resultado[0].equals("Error")) {
-                    JOptionPane.showMessageDialog(this, "Código no encontrado: " + codigo, "Aviso", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    List<String[]> colectivos = data.LectorXML.obtenerColectivosPorTitulo(codigo);
-                    limpiar_panel_lectura();
-                    cargar_colectivos(colectivos);
-                    visualizar_solo_colectivos();
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Por favor introduce un código.", "Campo vacío", JOptionPane.WARNING_MESSAGE);
-            }
-        });
-
-        panelEscritura.getBotonTodos().addActionListener(e -> {
-            limpiar_panel_lectura();
-            visualizar_colectivos();
-            List<String[]> titulos = data.LectorXML.obtenerTitulos();
-            cargar_titulos(titulos);
-        });
     }
 
 
@@ -111,14 +84,6 @@ public class VentanaPrincipal extends JFrame {
 
     public JTable obtener_tabla_titulos() {
         return panelBusqueda.getTablaTitulos();
-    }
-
-    public void visualizar_opciones_busqueda() {
-        layoutOpciones.show(panelOpciones, "busqueda");
-    }
-
-    public void visualizar_panel_escritura() {
-        layoutOpciones.show(panelOpciones, "escritura");
     }
 
     public void visualizar_colectivos() {
@@ -151,19 +116,28 @@ public class VentanaPrincipal extends JFrame {
     public void mostrarPanelVerificador()
     {
         layoutCentral.show(panelCentral, "lectura");
-        layoutOpciones.show(panelOpciones,"vacio");
         panelvVerificador.limpiar_campo();
     }
     public void mostrarPanelBusqueda()
     {
         layoutCentral.show(panelCentral, "busqueda");
-        layoutOpciones.show(panelOpciones, "busqueda");
         panelBusqueda.mostrarVacio();
+        panelBusqueda.getPanelRadioBotones().visualizar_panel();
     }
     public void mostrarPanelEscritura()
     {
         layoutCentral.show(panelCentral, "escritura");
-        layoutOpciones.show(panelOpciones, "escritura");
         panelvVerificador.limpiar_campo();
+        panelEscritura.mostrarFiltros();
+    }
+    public void visualizar_colectivos_sin_radios()
+    {
+        layoutCentral.show(panelCentral,"busqueda");
+    }
+    public void limpiar_panel_lectura_sin_radios()
+    {
+        panelvVerificador.limpiar_campo();
+        panelBusqueda.mostrarVacio();
+        panelBusqueda.getPanelRadioBotones().ocultar_panel();
     }
 }
