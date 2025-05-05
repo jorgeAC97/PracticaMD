@@ -38,5 +38,7 @@ public class PanelEscritura extends JPanel {
     public void mostrarFiltros() {
         filtrosPanel.setVisible(true);
     }
+    public void prueba()
+    {}
 
 }
