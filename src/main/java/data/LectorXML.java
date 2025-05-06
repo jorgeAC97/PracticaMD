@@ -141,5 +141,55 @@ public class LectorXML
             return new String[]{"Error", "", e.getMessage()};
         }
     }
+    public static List<String[]> obtenerColectivosParaEscritura(String codigoTitulo) {
+        List<String[]> datos = new ArrayList<>();
+
+        try {
+            InputStream xml = LectorXML.class.getClassLoader().getResourceAsStream(XML_FILE);
+            if (xml == null) {
+                datos.add(new String[]{"Error", "Archivo no encontrado", "", "", "", "", ""});
+                return datos;
+            }
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(xml);
+            doc.getDocumentElement().normalize();
+
+            NodeList titulos = doc.getElementsByTagName("Titulo");
+
+            for (int i = 0; i < titulos.getLength(); i++) {
+                Element titulo = (Element) titulos.item(i);
+
+                if (codigoTitulo.equals(titulo.getAttribute("Codigo"))) {
+                    String descTitulo = titulo.getAttribute("Descripcion");
+
+                    NodeList colectivos = titulo.getElementsByTagName("Colectivo");
+                    for (int j = 0; j < colectivos.getLength(); j++) {
+                        Element colectivo = (Element) colectivos.item(j);
+                        String codColectivo = colectivo.getAttribute("Codigo");
+                        String descColectivo = colectivo.getAttribute("Descripcion");
+
+                        String tarifa1 = getUnidadesTarifa(colectivo, "Tarifa_Venta_1");
+                        String tarifa2 = getUnidadesTarifa(colectivo, "Tarifa_Venta_2");
+                        String tarifa3 = getUnidadesTarifa(colectivo, "Tarifa_Venta_3");
+
+                        datos.add(new String[]{
+                                codigoTitulo, descTitulo,
+                                codColectivo, descColectivo,
+                                tarifa1, tarifa2, tarifa3
+                        });
+                    }
+                    break;
+                }
+            }
+
+        } catch (Exception e) {
+            datos.add(new String[]{"Error", "", "", "", "", "", e.getMessage()});
+        }
+
+        return datos;
+    }
+
 
 }

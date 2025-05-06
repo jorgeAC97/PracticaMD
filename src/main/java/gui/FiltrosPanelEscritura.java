@@ -8,6 +8,7 @@ public class FiltrosPanelEscritura extends JPanel {
     private JTextField campoBusqueda;
     private JButton botonOK;
     private JButton botonTodos;
+    private JButton butGuardar;
     private final PanelEscritura panelPadre;
 
     public FiltrosPanelEscritura(PanelEscritura padre)
@@ -21,6 +22,7 @@ public class FiltrosPanelEscritura extends JPanel {
         campoBusqueda = new JTextField(15);
         botonOK = new JButton("OK");
         botonTodos = new JButton("Todos los códigos");
+        butGuardar =new JButton("Guardar cambios");
 
         JPanel campoConBoton = new JPanel(new BorderLayout());
         campoConBoton.add(campoBusqueda, BorderLayout.CENTER);
@@ -29,35 +31,37 @@ public class FiltrosPanelEscritura extends JPanel {
         add(etiqueta);
         add(campoConBoton);
         add(botonTodos);
+        add(butGuardar);
 
         configurarEventos();
     }
 
     private void configurarEventos()
     {
-        botonOK.addActionListener(e->{
-            String codigo= campoBusqueda.getText().trim();
-            if (!codigo.isEmpty())
-            {
+        botonOK.addActionListener(e -> {
+            String codigo = campoBusqueda.getText().trim();
+            if (!codigo.isEmpty()) {
                 String[] resultado = data.LectorXML.buscarTituloPorCodigo(codigo);
-                if (resultado[0].equals("No encontrado")|| resultado[0].equals("Error"))
-                {
-                    JOptionPane.showMessageDialog(this,"Codigo no encontrado;"+codigo,"Aviso",JOptionPane.WARNING_MESSAGE);
-                }else
-                {
-                    List<String[]>colectivos= data.LectorXML.obtenerColectivosPorTitulo(codigo);
+                if (resultado[0].equals("No encontrado") || resultado[0].equals("Error")) {
+                    JOptionPane.showMessageDialog(this, "Codigo no encontrado: " + codigo, "Aviso", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    List<String[]> colectivos = data.LectorXML.obtenerColectivosParaEscritura(codigo);
+
                     panelPadre.limpiarResultados();
-                    panelPadre.mostrarResultados(colectivos);
+                    panelPadre.mostrar_resultados_colectivos(colectivos); // ✅ Correcto
                 }
-            }else
-            {
-                JOptionPane.showMessageDialog(this,"Por favor introduce un código.","Campo vacio",JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor introduce un código.", "Campo vacío", JOptionPane.WARNING_MESSAGE);
             }
         });
+
         botonTodos.addActionListener(e -> {
             List<String[]> titulos = data.LectorXML.obtenerTitulos();
             panelPadre.limpiarResultados();
-            panelPadre.mostrarResultados(titulos);
+            panelPadre.mostrar_resultados_Titulos(titulos);
+        });
+        butGuardar.addActionListener(e->{
+            panelPadre.guardarCambios();
         });
     }
 
