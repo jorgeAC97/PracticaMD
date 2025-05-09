@@ -23,7 +23,11 @@ public class VentanaPrincipal extends JFrame {
 
         // Panel superior con botones y opciones
         PanelBotonesPrincipales panelBotones = new PanelBotonesPrincipales(this);
+        PanelSelectorXML panelSelectorXML = new PanelSelectorXML();
+
         this.panelEscritura = new PanelEscritura();
+
+
 
         MisRadioBotones gestorRadios = new MisRadioBotones(this);
         this.panelRadioBotones = gestorRadios.crearPanel();
@@ -36,6 +40,7 @@ public class VentanaPrincipal extends JFrame {
         JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER,20,10));
         panelSuperior.setBackground(Color.LIGHT_GRAY);
         panelSuperior.add(panelBotones);
+        panelSuperior.add(panelSelectorXML);
 
 
 
@@ -130,14 +135,5 @@ public class VentanaPrincipal extends JFrame {
         panelvVerificador.limpiar_campo();
         panelEscritura.mostrarFiltros();
     }
-    public void visualizar_colectivos_sin_radios()
-    {
-        layoutCentral.show(panelCentral,"busqueda");
-    }
-    public void limpiar_panel_lectura_sin_radios()
-    {
-        panelvVerificador.limpiar_campo();
-        panelBusqueda.mostrarVacio();
-        panelBusqueda.getPanelRadioBotones().ocultar_panel();
-    }
+
 }
