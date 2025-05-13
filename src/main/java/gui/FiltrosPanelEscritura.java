@@ -11,55 +11,51 @@ public class FiltrosPanelEscritura extends JPanel {
     private JButton butGuardar;
     private final PanelEscritura panelPadre;
 
-    public FiltrosPanelEscritura(PanelEscritura padre)
-    {
-        this.panelPadre= padre;
+    public FiltrosPanelEscritura(PanelEscritura padre) {
+        this.panelPadre = padre;
 
         setLayout(new FlowLayout());
         setVisible(false);
 
-        JLabel etiqueta = new JLabel("Búsqueda manual:");
-        campoBusqueda = new JTextField(15);
-        botonOK = new JButton("OK");
         botonTodos = new JButton("Todos los códigos");
-        butGuardar =new JButton("Guardar cambios");
+        butGuardar = new JButton("Guardar cambios");
 
-        JPanel campoConBoton = new JPanel(new BorderLayout());
-        campoConBoton.add(campoBusqueda, BorderLayout.CENTER);
-        campoConBoton.add(botonOK, BorderLayout.EAST);
-
-        add(etiqueta);
-        add(campoConBoton);
         add(botonTodos);
         add(butGuardar);
 
         configurarEventos();
     }
 
+
     private void configurarEventos()
     {
-        botonOK.addActionListener(e -> {
-            String codigo = campoBusqueda.getText().trim();
-            if (!codigo.isEmpty()) {
-                String[] resultado = data.LectorXML.buscarTituloPorCodigo(codigo);
-                if (resultado[0].equals("No encontrado") || resultado[0].equals("Error")) {
-                    JOptionPane.showMessageDialog(this, "Codigo no encontrado: " + codigo, "Aviso", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    List<String[]> colectivos = data.LectorXML.obtenerColectivosParaEscritura(codigo);
 
-                    panelPadre.limpiarResultados();
-                    panelPadre.mostrar_resultados_colectivos(colectivos); // ✅ Correcto
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Por favor introduce un código.", "Campo vacío", JOptionPane.WARNING_MESSAGE);
-            }
-        });
 
         botonTodos.addActionListener(e -> {
-            List<String[]> titulos = data.LectorXML.obtenerTitulos();
+            VentanaPrincipal ventana = (VentanaPrincipal) SwingUtilities.getWindowAncestor(this);
+            String archivoSeleccionado = ventana.getNombreArchivoXMLSeleccionado();
+
+            List<String[]> titulos = data.LectorXML.obtenerTitulos(archivoSeleccionado);
             panelPadre.limpiarResultados();
             panelPadre.mostrar_resultados_Titulos(titulos);
+
+            // Agregar el listener aquí para detectar selección
+            JTable tablaCodigos = panelPadre.getTablaCodigos(); // 👈 este método lo añades abajo
+            tablaCodigos.getSelectionModel().addListSelectionListener(ev -> {
+                if (!ev.getValueIsAdjusting() && tablaCodigos.getSelectedRow() != -1) {
+                    String codigo = tablaCodigos.getValueAt(tablaCodigos.getSelectedRow(), 0).toString();
+
+                    List<String[]> colectivos = data.LectorXML.obtenerColectivosParaEscritura(archivoSeleccionado,codigo);
+                    panelPadre.cargarColectivos(colectivos);
+
+                    String[] metadatos = data.LectorXML.obtenerMetadatosTitulo(archivoSeleccionado, codigo);
+                    panelPadre.limpiarDetalles(); // 👈 LIMPIA FILAS anteriores
+                    panelPadre.agregarDetalles(metadatos);
+                }
+            });
         });
+
+
         butGuardar.addActionListener(e->{
             panelPadre.guardarCambios();
         });

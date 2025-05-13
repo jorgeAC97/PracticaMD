@@ -12,10 +12,13 @@ public class PanelBusqueda extends JPanel
     private JTable tablaTitulos;
     private JTable tablaColectivos;
     private JTable tablaTodosTitulos;
+    private JTable tableMetadatos;
 
     private DefaultTableModel modeloTitulos;
     private DefaultTableModel modeloColectivos;
     private DefaultTableModel modeloTodosTitulos;
+    private DefaultTableModel modeloMetadatos;
+
 
     private JPanel panelCentral;
     private CardLayout layoutCentral;
@@ -35,9 +38,15 @@ public class PanelBusqueda extends JPanel
         );
         modeloTodosTitulos =new DefaultTableModel(new String[]{"Códigp","Descripción","Zona"},0);
 
+        modeloMetadatos =new DefaultTableModel(
+          new String[]{"Empresa","Inicio","Cambio 1","Cambio 2","Fin"},0
+        );
+
         tablaTitulos = new JTable(modeloTitulos);
         tablaColectivos = new JTable(modeloColectivos);
         tablaTodosTitulos =new JTable(modeloTodosTitulos);
+        tableMetadatos= new JTable(modeloMetadatos);
+
 
         tablaColectivos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -65,6 +74,19 @@ public class PanelBusqueda extends JPanel
         gbc.gridx = 1;
         gbc.weightx = 0.85;
         panelDoble.add(scrollColectivos, gbc);
+
+        JScrollPane scrollMetadatos= new JScrollPane(tableMetadatos);
+
+        gbc.gridx=0;
+        gbc.gridy=1;
+        gbc.gridwidth=2;
+        gbc.weighty=0.2;
+        gbc.weightx=0.1;
+
+        tableMetadatos.setRowHeight(25);
+
+        gbc.fill= GridBagConstraints.BOTH;
+        panelDoble.add(scrollMetadatos,gbc);
 
         layoutCentral =new CardLayout();
         panelCentral =new JPanel(layoutCentral);
@@ -113,11 +135,18 @@ public class PanelBusqueda extends JPanel
         return tablaTitulos;
     }
 
-    public PanelRadioBotones getPanelRadioBotones() {
+    public PanelRadioBotones getPanelRadioBotones()
+    {
         return panelRadioBotones;
     }
     public void mostrarVacio()
     {
         layoutCentral.show(panelCentral,"vacio");
     }
+    public void cargarMetadatosTitulo(String[]datos)
+    {
+        modeloMetadatos.setRowCount(0);
+        modeloMetadatos.addRow(datos);
+    }
+
 }

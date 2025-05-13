@@ -9,6 +9,7 @@ public class VentanaPrincipal extends JFrame {
     private PanelBusqueda panelBusqueda;
     private PanelRadioBotones panelRadioBotones;
     private PanelEscritura panelEscritura;
+    private PanelSelectorXML panelSelectorXML;
 
 
 
@@ -23,9 +24,12 @@ public class VentanaPrincipal extends JFrame {
 
         // Panel superior con botones y opciones
         PanelBotonesPrincipales panelBotones = new PanelBotonesPrincipales(this);
-        PanelSelectorXML panelSelectorXML = new PanelSelectorXML();
 
         this.panelEscritura = new PanelEscritura();
+        this.panelSelectorXML = new PanelSelectorXML(this);
+
+
+
 
 
 
@@ -40,7 +44,7 @@ public class VentanaPrincipal extends JFrame {
         JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER,20,10));
         panelSuperior.setBackground(Color.LIGHT_GRAY);
         panelSuperior.add(panelBotones);
-        panelSuperior.add(panelSelectorXML);
+        panelSuperior.add(this.panelSelectorXML);
 
 
 
@@ -135,5 +139,13 @@ public class VentanaPrincipal extends JFrame {
         panelvVerificador.limpiar_campo();
         panelEscritura.mostrarFiltros();
     }
+    public String getNombreArchivoXMLSeleccionado() {
+        return panelSelectorXML.obtenerNombreArchivoSeleccionado();
+    }
 
+
+    public void cargar_metadatos(String[] datos)
+    {
+        panelBusqueda.cargarMetadatosTitulo(datos);
+    }
 }
